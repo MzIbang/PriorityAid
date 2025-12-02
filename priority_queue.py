@@ -10,11 +10,18 @@ def right_child(i):
 def swap(heap, i, j):
     heap[i], heap[j] = heap[j], heap[i]
 
+def is_higher_priority(p1, p2):
+    if p1['priority'] < p2['priority']:
+        return True
+    elif p1['priority'] == p2['priority']:
+        return p1['id'] < p2['id']
+    return False
+
 def heapify_up(heap, i):
     if i == 0:
         return
     p = parent(i)
-    if heap[i]['priority'] < heap[p]['priority']:
+    if is_higher_priority(heap[i], heap[p]):
         swap(heap, i, p)
         heapify_up(heap, p)
 
@@ -22,11 +29,10 @@ def heapify_down(heap, i):
     smallest = i
     left = left_child(i)
     right = right_child(i)
-    
-    if left < len(heap) and heap[left]['priority'] < heap[smallest]['priority']:
+    if left < len(heap) and is_higher_priority(heap[left], heap[smallest]):
         smallest = left
-    
-    if right < len(heap) and heap[right]['priority'] < heap[smallest]['priority']:
+
+    if right < len(heap) and is_higher_priority(heap[right], heap[smallest]):
         smallest = right
     
     if smallest != i:
@@ -59,4 +65,4 @@ def size(heap):
     return len(heap)
 
 def get_all(heap):
-    return sorted(heap, key=lambda x: x['priority'])
+    return sorted(heap, key=lambda x: (x['priority'], x['id']))
